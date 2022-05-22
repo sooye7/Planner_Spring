@@ -3,7 +3,7 @@ package com.Planner.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseTimeEntity {
+public abstract class BaseTimeEntity {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime regTime;
 
-    @LastModifiedBy
-    private java.time.LocalDateTime updateTime;
+    @LastModifiedDate
+    private LocalDateTime updateTime;
 }

@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import javax.transaction.Transactional;
+
 
 @Service
 @Transactional  // 트랜잭션 설정 :성공하면 그대로 적용, 실패하면 롤백
@@ -23,20 +25,20 @@ public class MemberService implements UserDetailsService {
     }
 
     private void validateDuplicateMember(Member member){
-        Member findMember=memberRepository.findById(member.getId());
+        Member findMember=memberRepository.findByEmail(member.getEmail());
         if(findMember!=null){
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
     }
 
     @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Member member=memberRepository.findById(id);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member=memberRepository.findByEmail(email);
 
         if(member==null){
-            throw new UsernameNotFoundException(id);
+            throw new UsernameNotFoundException(email);
         }
-        return User.builder().username(member.getId())
+        return User.builder().username(member.getEmail())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();

@@ -24,23 +24,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        // 페이지 권한 설정, 로그인 페이지 설정, 로그아웃 메소드 등 설정을 작성
         http.formLogin()
                 .loginPage("/members/login")
                 .defaultSuccessUrl("/")
-                .usernameParameter("id")
+                .usernameParameter("email")
                 .failureUrl("/members/login/error")
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                 .logoutSuccessUrl("/");
+
         http.authorizeRequests()
-                .mvcMatchers("/","/members/**","/item/**","/images/**").permitAll()
+                .mvcMatchers("/","/members/**").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
         http.exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
     }
-    @Bean // 객체 빈객체 -> SpringContainer  들어감. 이 객체 하나로 돌려씀 (싱글톤)
+    @Bean // 원두 -> 객체 빈객체 -> SpringContainer  들어감. 이 객체 하나로 돌려씀 (싱글톤)
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();  // 비밀번호를 암호화하는 해시함수
     }
@@ -56,4 +59,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web)throws Exception{
         web.ignoring().antMatchers("/css/**","/js/**","/img/**");  //ignoring 예외처리 한다는 의미 (보안에서 제외한다는 의미)
     }
+
 }

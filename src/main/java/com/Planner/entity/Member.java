@@ -1,6 +1,5 @@
 package com.Planner.entity;
 
-import com.Planner.constant.Role;
 import com.Planner.dto.MemberFormDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +27,6 @@ public class Member extends BaseEntity {
 
     private String nickNm;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
         Member member=new Member();
@@ -38,7 +35,6 @@ public class Member extends BaseEntity {
         //passwordEncoder.encode->암호화
         String password=passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
-        member.setRole(Role.ADMIN);  // 처음에 USER로
         return member;
     }
 
